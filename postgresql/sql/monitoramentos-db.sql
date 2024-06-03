@@ -1,7 +1,9 @@
 CREATE DATABASE itps;
 \c itps;
 
-CREATE USER itps WITH PASSWORD 'CHANGE_THIS_PASSWORD';
+\set itps_password `echo $MAIN_ITPS_USER_PASSWORD`
+CREATE USER itps WITH PASSWORD :'itps_password';
+
 GRANT ALL PRIVILEGES ON DATABASE itps TO itps;
 
 CREATE SCHEMA arboviroses;
