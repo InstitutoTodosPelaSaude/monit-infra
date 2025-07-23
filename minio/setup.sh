@@ -32,7 +32,4 @@ done
 mc mb --ignore-existing itps/data/arbo/data/combined
 mc mb --ignore-existing itps/data/arbo/data/matrices
 
-mc anonymous set public itps/data/arbo/data/matrices
-mc anonymous set public itps/data/respat/data/matrices
-
 echo "MinIO setup complete. Buckets and folders are ready."
