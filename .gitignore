@@ -1,1 +1,4 @@
 .env
+mongodb/data
+postgresql/data
+minio/data

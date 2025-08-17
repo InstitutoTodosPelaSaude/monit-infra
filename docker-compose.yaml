@@ -10,11 +10,9 @@ services:
       POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
     ports:
       - "5433:5432"
-  adminer:
-    image: adminer
-    ports:
-      - "8091:8080"
-  
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+      
   minio:
     build: ./minio
     env_file:
@@ -26,4 +24,22 @@ services:
       - "9000:9000"
       - "9001:9001"
     command: server /data --console-address ":9001"
+    volumes:
+      - ./minio/data:/data
+
+  mongodb:
+    build: ./mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_APP_DB: ${MONGO_APP_DB}
+      MONGO_APP_USER: ${MONGO_APP_USER}
+      MONGO_APP_PASS: ${MONGO_APP_PASS}
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf", "--port", "${MONGO_PORT}"]
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - ./mongodb/data:/data/db
+      - ./mongodb/mongod.conf:/etc/mongo/mongod.conf:ro
+      - ./mongodb/init:/docker-entrypoint-initdb.d:ro
   
