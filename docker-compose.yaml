@@ -14,7 +14,7 @@ services:
     networks:
       - default
       - shared-network
-    mem_limit: 3g
+    mem_limit: 6g
     memswap_limit: -1
 
   minio:
@@ -33,7 +33,23 @@ services:
     networks:
       - default
       - shared-network
-  
+
+  mongodb:
+    build: ./mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_APP_DB: ${MONGO_APP_DB}
+      MONGO_APP_USER: ${MONGO_APP_USER}
+      MONGO_APP_PASS: ${MONGO_APP_PASS}
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf", "--port", "${MONGO_PORT}"]
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - ./mongodb/data:/data/db
+      - ./mongodb/mongod.conf:/etc/mongo/mongod.conf:ro
+      - ./mongodb/init:/docker-entrypoint-initdb.d:ro
+
 volumes:
   itps-dw-data:
 
